@@ -1,1 +1,1 @@
-<?php echo json_encode(["message" => "PHP API is working"]); ?>
+<?php echo json_encode(["message" => "TESTING"]); ?>
