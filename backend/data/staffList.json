@@ -1,32 +1,26 @@
 [
-    {
-        "ID": "6863553cc08c4",
-        "name": "Staff1",
-        "role": "Cook",
-        "phone": "123-456-7890"
-    },
-    {
-        "ID": "6863554e953a9",
-        "name": "Staff2",
-        "role": "Server",
-        "phone": "998-765-4321"
-    },
-    {
-        "ID": "686357621971a",
-        "name": "Staff3",
-        "role": "Manager",
-        "phone": "456-234-7854"
-    },
-    {
-        "ID": "686359cb23068",
-        "name": "Staff4",
-        "role": "Server",
-        "phone": "123-543-2345"
-    },
-    {
-        "ID": "686425d69aad8",
-        "name": "Staff5",
-        "role": "Cook",
-        "phone": "324-543-2345"
-    }
+  {
+    "ID": "6863553cc08c4",
+    "name": "Staff1",
+    "role": "Cook",
+    "phone": "123-456-7890"
+  },
+  {
+    "ID": "6863554e953a9",
+    "name": "Staff2",
+    "role": "Server",
+    "phone": "998-765-4321"
+  },
+  {
+    "ID": "686357621971a",
+    "name": "Staff3",
+    "role": "Manager",
+    "phone": "456-234-7854"
+  },
+  {
+    "ID": "686359cb23068",
+    "name": "Staff4",
+    "role": "Server",
+    "phone": "123-543-2345"
+  }
 ]

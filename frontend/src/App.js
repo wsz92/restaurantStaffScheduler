@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react"; // load React library
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // React router to allow
+import React, {useEffect, useState} from "react"; // load React library
+import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom"; // React router to allow
 
 // welcome page for navigation
 function MainPage() {
   return (
-    <div style={{ textAlign: "center", paddingTop: "60px" }}>
+    <div style={{textAlign: "center", paddingTop: "60px" }}>
       <h1>🍽️ Restaurant Staff Scheduler🥢</h1>
-      <h2 style={{ marginTop: "40px", marginBottom: "30px" }}> Welcome 👋🏻</h2>
-      <p style={{ marginTop: "60px", marginBottom: "30px" }}>Start Managing Your Restaurant With a Click Below!</p>
+      <h2 style={{marginTop: "40px", marginBottom: "30px" }}> Welcome 👋🏻</h2>
+      <p style={{marginTop: "60px", marginBottom: "30px" }}>Start Managing Your Restaurant With a Click Below!</p>
       <Link to="/staffList">
-        <button style={{ margin: "10px", padding: "10px 30px" }}>Manage Staff</button></Link>
+        <button style={{margin: "10px", padding: "10px 30px" }}>Manage Staff</button></Link>
       <Link to="/shifts">
-        <button style={{ margin: "10px", padding: "10px 30px" }}>Manage Shifts</button></Link>
+        <button style={{margin: "10px", padding: "10px 30px" }}>Manage Shifts</button></Link>
     </div>
   );
 }
@@ -22,22 +22,22 @@ function StaffPage() {
   // initialize constant variables
   const [staffList, setStaffList] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newStaff, setNewStaff] = useState({ name: "", role: "", phone: "" });
+  const [newStaff, setNewStaff] = useState({name: "", role: "", phone: ""});
 
   useEffect(() => {fetch("http://localhost:8000/staffList") // site that information will be fetched from
-  .then(res => res.json()) // then convert to json
-  .then(data => { // load the staff list from the backend 
-    if (Array.isArray(data)) {
-      setStaffList(data);
-    } else {
-      setStaffList([]);  // if the list has formatting issues, start a new empty list
-    }
-  })
-  .catch(() => setStaffList([]));  // if the list throws an error, start a new empty list
+    .then(res => res.json()) // then convert to json
+    .then(data => { // load the staff list from the backend 
+      if (Array.isArray(data)) {
+        setStaffList(data);
+      } else {
+        setStaffList([]);  // if the list has formatting issues, start a new empty list
+      }
+    })
+    .catch(() => setStaffList([]));  // if the list throws an error, start a new empty list
   }, []);
 
   const openModal = () => { // when the new staff pop-up open, all entries should be blank
-    setNewStaff({ name: "", role: "", phone: "" });
+    setNewStaff({name: "", role: "", phone: ""});
     setShowModal(true);
   };
 
@@ -46,10 +46,11 @@ function StaffPage() {
   };
 
   const handleChange = (field, value) => { // as the user types into the pop-up, update the new staff object
-    setNewStaff({ ...newStaff, [field]: value });
+    setNewStaff({...newStaff, [field]: value});
   };
 
-  const handleAddStaff = () => { // send the new staff information to the backend to be saved
+  // send the new staff information to the backend to be saved
+  const handleAddStaff = () => {
 
     // before adding the new staff, ensure the phone number is correctly entered with dashes
     const phoneRegExCode = /^\d{3}-\d{3}-\d{4}$/;
@@ -60,7 +61,7 @@ function StaffPage() {
     
     fetch("http://localhost:8000/staffList", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         Name: newStaff.name,
         Role: newStaff.role,
@@ -84,27 +85,43 @@ function StaffPage() {
     });
   };
 
+  // send the  staff information to the backend to be deleted
+  const handleDeleteStaff = (id) => {
+    if (!window.confirm("Delete Staff?")) {
+      return; // confirm with user before deleting
+    }
+    fetch("http://localhost:8000/staffList", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ID: id }),
+    })
+    .then(() => setStaffList(prev => prev.filter(staff => staff.ID !== id))) // update the staff list being displayed
+    .catch((error) => {
+      alert(error.message); // if error, display to user error message
+    });
+  };
+
+
   return (
     // this keeps the "Back to Home" button relative to the top left of the page
-    <div style={{ position: "relative", minHeight: "100vh" }}>
+    <div style={{position: "relative", minHeight: "100vh"}}>
     <Link to="/">
       <button
-        style={{position: "absolute", top: "20px", left: "20px", padding: "5px 20px"}}
-      >
-        ⬅ Back to Home
+          style={{position: "absolute", top: "20px", left: "20px", padding: "5px 20px"}}>
+          ⬅ Back to Home
       </button>
     </Link> 
 
     {/* this keeps the "New Staff" button relative to the top center of the page */}
-    <div style={{ textAlign: "center", marginBottom: "20px" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>👥 Staff Management 👥</h2>
-      <button onClick={openModal} style={{ padding: "10px 15px", marginTop: "10px" }}>
-          ➕ New Staff
+    <div style={{textAlign: "center", marginBottom: "20px"}}>
+      <h2 style={{textAlign: "center", marginBottom: "20px"}}>👥 Staff Management 👥</h2>
+      <button onClick={openModal} style={{padding: "10px 15px", marginTop: "10px"}}>
+        ➕ New Staff
       </button>
     </div>
 
     {/* formatting for the staff table */}
-    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+    <table style={{width: "100%", borderCollapse: "collapse"}}>
       <thead>
         <tr>
           <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Name</th>
@@ -113,13 +130,14 @@ function StaffPage() {
         </tr>
       </thead>
       <tbody>
-      {Array.isArray(staffList) && staffList.map((staff, index) => ( // maps each staff information to each row
-      <tr key={index}>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{staff.name}</td>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{staff.role}</td>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{staff.phone}</td> 
-      </tr>
-    ))}
+        {Array.isArray(staffList) && staffList.map((staff, index) => ( // maps each staff information to each row
+        <tr key={index}>
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{staff.name}</td>
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{staff.role}</td>
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{staff.phone}</td> 
+          <td> <button onClick={() => handleDeleteStaff(staff.ID)}>🗑️</button></td>
+        </tr>
+        ))}
       </tbody>
     </table>
 
@@ -156,11 +174,13 @@ function StaffPage() {
                 <button onClick={handleAddStaff} style={{ marginRight: "10px" }}>
                   Save Staff
                 </button>
-                <button onClick={closeModal}>Cancel Entry</button>
+                <button onClick={closeModal}>
+                  Cancel Entry
+                </button>
               </div>
             </div>
           </div>
-        )}
+  )}
       </div>
     );
   }
@@ -189,17 +209,17 @@ function ShiftPage() {
 
   // included staff list so user can choose staff to assign shifts to
   useEffect(() => {
-  fetch("http://localhost:8000/staffList") // site that information will be fetched from
-    .then(res => res.json()) // then convert to json
-    .then(data => { // load the shift list from the backend 
-      if (Array.isArray(data)) {
-        setStaffList(data);
-      } else {
-        setStaffList([]);  // if the list has formatting issues, start a new empty list
-      }
-    })  
-  .catch(() => setStaffList([])); // if the list throws an error, start a new empty list
-}, []);
+    fetch("http://localhost:8000/staffList") // site that information will be fetched from
+      .then(res => res.json()) // then convert to json
+      .then(data => { // load the shift list from the backend 
+        if (Array.isArray(data)) {
+          setStaffList(data);
+        } else {
+          setStaffList([]);  // if the list has formatting issues, start a new empty list
+        }
+      })  
+    .catch(() => setStaffList([])); // if the list throws an error, start a new empty list
+  }, []);
 
   const openModal = () => { // when the new shift pop-up open, all entries should be blank
     setNewShift({ day: "", staffId: "", start: "", end: "", role: ""});
@@ -211,58 +231,73 @@ function ShiftPage() {
   };
 
   const handleChange = (field, value) => { // as the user types into the pop-up, update the new shift object
-    setNewShift({ ...newShift, [field]: value });
+    setNewShift({...newShift, [field]: value});
   };
 
   const handleAddShift = () => { // send the new staff information to the backend to be saved
-  fetch("http://localhost:8000/shifts", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      Day: newShift.day,
-      StaffID: newShift.staffId,
-      Start: newShift.start,
-      End: newShift.end,
-      Role: newShift.role
-    }),
-  })
-  .then(async (res) => { // checks if 400 error occured and throws error
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.Error);
+    fetch("http://localhost:8000/shifts", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        Day: newShift.day,
+        StaffID: newShift.staffId,
+        Start: newShift.start,
+        End: newShift.end,
+        Role: newShift.role
+      }),
+    })
+    .then(async (res) => { // checks if 400 error occured and throws error
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.Error);
+      }
+      return res.json();
+    })
+    .then((data) => { // update the staff list being displayed to show new staff
+      setShiftList((prevList) => [...prevList, data.shift]);
+      setShowModal(false); // close the new staff pop-up
+    })
+    .catch((error) => {
+      alert(error.message); // if error, display to user error message
+      console.error("Error from New Staff:", error);
+    });
+  };
+
+  // send the shift information to the backend to be deleted
+  const handleDeleteShift = (id) => {
+    if (!window.confirm("Delete Shift?")) {
+      return; // confirm with user before deleting
     }
-    return res.json();
-  })
-  .then((data) => { // update the staff list being displayed to show new staff
-    setShiftList((prevList) => [...prevList, data.shift]);
-    setShowModal(false); // close the new staff pop-up
-  })
-  .catch((error) => {
-    alert(error.message); // if error, display to user error message
-    console.error("Error from New Staff:", error);
-  });
+    fetch("http://localhost:8000/shifts", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ID: id }),
+    })
+      .then(() => setShiftList(prev => prev.filter(shift => shift.ID !== id))) // update the shift list being displayed
+      .catch((error) => {
+        alert(error.message) // if error, display to user error message
+      });
   };
 
   return (
     // this keeps the "Back to Home" button relative to the top left of the page
-    <div style={{ position: "relative", minHeight: "100vh" }}>
+    <div style={{position: "relative", minHeight: "100vh"}}>
     <Link to="/">
       <button
-        style={{position: "absolute", top: "20px", left: "20px", padding: "5px 20px"}}
-      >
+        style={{position: "absolute", top: "20px", left: "20px", padding: "5px 20px"}}>
         ⬅ Back to Home
       </button>
     </Link>
 
-    <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>📅 Shift Management 📅</h2>
-        <button onClick={openModal} style={{ padding: "10px 15px", marginTop: "10px" }}>
-            ➕ New Shift
-        </button>
-      </div>
+    <div style={{textAlign: "center", marginBottom: "20px"}}>
+      <h2 style={{textAlign: "center", marginBottom: "20px"}}>📅 Shift Management 📅</h2>
+      <button onClick={openModal} style={{padding: "10px 15px", marginTop: "10px"}}>
+        ➕ New Shift
+      </button>
+    </div>
 
-      {/* formatting for the shift table */}
-    <table style={{ width: "100%", borderCollapse: "collapse" }}>
+    {/* formatting for the shift table */}
+    <table style={{width: "100%", borderCollapse: "collapse"}}>
       <thead>
         <tr>
           <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Day</th>
@@ -274,22 +309,22 @@ function ShiftPage() {
       </thead>
       <tbody>
       {Array.isArray(shiftList) && shiftList.map((shift, index) => ( // maps each shift information to each row
-      <tr key={index}>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.day}</td>
-        <td style={{ border: "1px solid #ccc", padding: "12px" }}>
-          {(() => {
-            const staff = staffList.find((s) => s.ID === shift.staffId);
-            return staff ? `${staff.name} (${staff.role})` : "Unknown Staff";
-          })()}
-        </td>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.start}</td> 
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.end}</td>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.role}</td>
-      </tr>
-    ))}
+        <tr key={index}>
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.day}</td>
+          <td style={{border: "1px solid #ccc", padding: "12px"}}>
+            {(() => {
+              const staff = staffList.find((s) => s.ID === shift.staffId);
+              return staff ? `${staff.name} (${staff.role})` : "Missing Staff"; // display staff name (staff role) or missing staff is not assigned
+            })()}
+          </td>
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.start}</td> 
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.end}</td>
+          <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.role}</td>
+          <td> <button onClick={() => handleDeleteShift(shift.ID)}>🗑️</button></td>
+        </tr>
+      ))}
       </tbody>
     </table>
-
 
     {/* formatting for the new staff pop-up */}
     {showModal && (
@@ -347,10 +382,7 @@ function ShiftPage() {
                 </div>
               </div>
             </div>
-          )}
-
-
-
+    )}
     </div>
   );
 }
