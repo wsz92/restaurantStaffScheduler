@@ -139,7 +139,7 @@ function StaffPage() {
               <label>
                 Phone Number:
                 <input
-                  type="text"
+                  type="number" // only allow numbers and dashes to be inputted into the field
                   value={newStaff.phone}
                   onChange={(e) => handleChange("phone", e.target.value)} // make changes after user inputs information
                 />
@@ -291,7 +291,7 @@ function ShiftPage() {
                 <label>
                   Day:
                   <input
-                    type="text"
+                    type="date"
                     value={newShift.day}
                     onChange={(e) => handleChange("day", e.target.value)} // make changes after user inputs information
                   />
@@ -310,7 +310,7 @@ function ShiftPage() {
                 <label>
                   Start Time:
                   <input
-                    type="text"
+                    type="time"
                     value={newShift.start}
                     onChange={(e) => handleChange("start", e.target.value)} // make changes after user inputs information
                   />
@@ -318,7 +318,7 @@ function ShiftPage() {
                 <label>
                   End Time:
                   <input
-                    type="text"
+                    type="time"
                     value={newShift.end}
                     onChange={(e) => handleChange("end", e.target.value)} // make changes after user inputs information
                   />

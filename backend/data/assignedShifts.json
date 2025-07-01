@@ -1,18 +1,10 @@
 [
     {
-        "ID": "68642897bfbdf",
-        "day": "July 1 2025",
+        "ID": "68642d4a2cd23",
+        "day": "2025-07-01",
         "staffId": "6863553cc08c4",
-        "start": "9:00am",
-        "end": "3:00pm",
+        "start": "09:00",
+        "end": "15:00",
         "role": "Cook"
-    },
-    {
-        "ID": "686428b2babd6",
-        "day": "July 3 2025",
-        "staffId": "686357621971a",
-        "start": "9:00am",
-        "end": "5:00pmn",
-        "role": "Manager"
     }
 ]
