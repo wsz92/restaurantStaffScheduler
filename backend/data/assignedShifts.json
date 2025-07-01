@@ -1,1 +1,18 @@
-[]
+[
+    {
+        "ID": "6863677168397",
+        "day": "July 1 2025",
+        "name": "Staff1",
+        "start": "9:00am",
+        "end": "3:00pm",
+        "role": "Cook"
+    },
+    {
+        "ID": "68636b882c114",
+        "day": "July 1 2025",
+        "name": "Staff2",
+        "start": "9:00am",
+        "end": "12:00pm",
+        "role": "Server"
+    }
+]
