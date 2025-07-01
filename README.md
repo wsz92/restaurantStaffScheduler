@@ -6,36 +6,40 @@ Users will utilize a webpage to manage and schedule shifts for their staff.
 ## How to Run
 If you already have PHP and Node.js installed, skip to **Step 3**
 
-### Step 1: Install PHP (using Homebrew)
-Open Terminal to install
+### Step 1: Install PHP (using Homebrew for Mac)
+Open Terminal to install, type in:
 ```
 brew install php
 ```
 
-### Step 2: Install Node.js (to run React)
+### Step 2: Install Node.js to run React (using Homebrew for Mac)
+In your terminal:
 ```
 brew install node
 ```
 
 ### Step 3: Download or Clone the Repository
-This can be done from at https://github.com/wsz92/restaurantStaffScheduler, under the green "Code" Button or directly from the terminal
+This can be done from at https://github.com/wsz92/restaurantStaffScheduler, under the green "Code" Button and download as a zip file or directly from the terminal type:
 ```
 git clone https://github.com/wsz92/restaurantStaffScheduler.git
 ```
 
 ### Step 4: Run the Files
-Navigate to the correct main file
+Navigate to the correct main file in your terminal
 ```
 cd restaurantStaffScheduler
 ```
+If you are having issues locating your file, find where you saved the github file and copy and paste the path in place of ```restaurantStaffScheduler```
 
 #### 4.1: Backend
+In your terminal:
 ```
 php -S localhost:8000 -t backend/public
 ```
 The backend API will be displayed at http://localhost:8000/
 
 #### 4.2: Frontend
+In your terminal:
 ```
 cd frontend
 npm install
