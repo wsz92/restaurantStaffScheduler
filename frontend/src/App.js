@@ -50,30 +50,38 @@ function StaffPage() {
   };
 
   const handleAddStaff = () => { // send the new staff information to the backend to be saved
-  fetch("http://localhost:8000/staffList", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      Name: newStaff.name,
-      Role: newStaff.role,
-      Phone: newStaff.phone,
-    }),
-  })
-  .then(async (res) => { // checks if 400 error occured and throws error
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.Error);
+
+    // before adding the new staff, ensure the phone number is correctly entered with dashes
+    const phoneRegExCode = /^\d{3}-\d{3}-\d{4}$/;
+    if (!phoneRegExCode.test(newStaff.phone)) {
+      alert("Phone number must be in the format ###-###-####");
+      return;
     }
-    return res.json();
-  })
-  .then((data) => { // update the staff list being displayed to show new staff
-    setStaffList((prevList) => [...prevList, data.staff]);
-    setShowModal(false); // close the new staff pop-up
-  })
-  .catch((error) => {
-    alert(error.message); // if error, display to user error message
-    console.error("Error from New Staff:", error);
-  });
+    
+    fetch("http://localhost:8000/staffList", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        Name: newStaff.name,
+        Role: newStaff.role,
+        Phone: newStaff.phone,
+      }),
+    })
+    .then(async (res) => { // checks if 400 error occured and throws error
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.Error);
+      }
+      return res.json();
+    })
+    .then((data) => { // update the staff list being displayed to show new staff
+      setStaffList((prevList) => [...prevList, data.staff]);
+      setShowModal(false); // close the new staff pop-up
+    })
+    .catch((error) => {
+      alert(error.message); // if error, display to user error message
+      console.error("Error from New Staff:", error);
+    });
   };
 
   return (
@@ -139,7 +147,7 @@ function StaffPage() {
               <label>
                 Phone Number:
                 <input
-                  type="number" // only allow numbers and dashes to be inputted into the field
+                  type="text"
                   value={newStaff.phone}
                   onChange={(e) => handleChange("phone", e.target.value)} // make changes after user inputs information
                 />
