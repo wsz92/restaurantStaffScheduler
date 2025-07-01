@@ -1,18 +1,18 @@
 [
     {
-        "ID": "6863677168397",
+        "ID": "68642897bfbdf",
         "day": "July 1 2025",
-        "name": "Staff1",
+        "staffId": "6863553cc08c4",
         "start": "9:00am",
         "end": "3:00pm",
         "role": "Cook"
     },
     {
-        "ID": "68636b882c114",
-        "day": "July 1 2025",
-        "name": "Staff2",
+        "ID": "686428b2babd6",
+        "day": "July 3 2025",
+        "staffId": "686357621971a",
         "start": "9:00am",
-        "end": "12:00pm",
-        "role": "Server"
+        "end": "5:00pmn",
+        "role": "Manager"
     }
 ]

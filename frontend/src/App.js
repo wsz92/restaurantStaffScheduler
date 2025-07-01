@@ -117,7 +117,7 @@ function StaffPage() {
 
   {/* formatting for the new staff pop-up */}
   {showModal && (
-          <div style={{position: "fixed", top: 0, left: 0, height: "100vh", width: "100vw", backgroundColor: "rgba(0,0,0,0.4)", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <div style={{position: "fixed", top: 0, left: 0, height: "100vh", width: "100vw", backgroundColor: "rgba(181, 222, 242, 0.4)", display: "flex", justifyContent: "center", alignItems: "center"}}>
             <div style={{backgroundColor: "#fff", padding: "25px", borderRadius: "8px", width: "300px", display: "flex", flexDirection: "column", gap: "10px"}}>
               <h3>New Staff Information</h3>
               <label>
@@ -163,23 +163,38 @@ function ShiftPage() {
 
   // initialize constant variables
   const [shiftList, setShiftList] = useState([]);
+  const [staffList, setStaffList] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newShift, setNewShift] = useState({ day: "", name: "", start: "", end: "", role: "" });
+  const [newShift, setNewShift] = useState({ day: "", staffId: "", start: "", end: "", role: ""});
 
   useEffect(() => {fetch("http://localhost:8000/shifts") // site that information will be fetched from
-  .then(res => res.json()) // then convert to json
-  .then(data => { // load the shift list from the backend 
-    if (Array.isArray(data)) {
-      setShiftList(data);
-    } else {
-      setShiftList([]);  // if the list has formatting issues, start a new empty list
-    }
-  })
-  .catch(() => setShiftList([]));  // if the list throws an error, start a new empty list
+    .then(res => res.json()) // then convert to json
+    .then(data => { // load the shift list from the backend 
+      if (Array.isArray(data)) {
+        setShiftList(data);
+      } else {
+        setShiftList([]);  // if the list has formatting issues, start a new empty list
+      }
+    })
+    .catch(() => setShiftList([]));  // if the list throws an error, start a new empty list
   }, []);
 
+  // included staff list so user can choose staff to assign shifts to
+  useEffect(() => {
+  fetch("http://localhost:8000/staffList") // site that information will be fetched from
+    .then(res => res.json()) // then convert to json
+    .then(data => { // load the shift list from the backend 
+      if (Array.isArray(data)) {
+        setStaffList(data);
+      } else {
+        setStaffList([]);  // if the list has formatting issues, start a new empty list
+      }
+    })  
+  .catch(() => setStaffList([])); // if the list throws an error, start a new empty list
+}, []);
+
   const openModal = () => { // when the new shift pop-up open, all entries should be blank
-    setNewShift({ day: "", name: "", start: "", end: "", role: "" });
+    setNewShift({ day: "", staffId: "", start: "", end: "", role: ""});
     setShowModal(true);
   };
 
@@ -197,10 +212,10 @@ function ShiftPage() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       Day: newShift.day,
-      Name: newShift.name,
+      StaffID: newShift.staffId,
       Start: newShift.start,
       End: newShift.end,
-      Role: newShift.role,
+      Role: newShift.role
     }),
   })
   .then(async (res) => { // checks if 400 error occured and throws error
@@ -243,7 +258,7 @@ function ShiftPage() {
       <thead>
         <tr>
           <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Day</th>
-          <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Name</th>
+          <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Staff Name</th>
           <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Start Time</th>
           <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>End Time</th>
           <th style={{border: "1px solid #ccc", padding: "12px", backgroundColor: "#f2f2f2", textAlign: "left",}}>Role</th>
@@ -253,10 +268,15 @@ function ShiftPage() {
       {Array.isArray(shiftList) && shiftList.map((shift, index) => ( // maps each shift information to each row
       <tr key={index}>
         <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.day}</td>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.name}</td>
+        <td style={{ border: "1px solid #ccc", padding: "12px" }}>
+          {(() => {
+            const staff = staffList.find((s) => s.ID === shift.staffId);
+            return staff ? `${staff.name} (${staff.role})` : "Unknown Staff";
+          })()}
+        </td>
         <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.start}</td> 
         <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.end}</td>
-        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.role}</td> 
+        <td style={{border: "1px solid #ccc", padding: "12px",}}>{shift.role}</td>
       </tr>
     ))}
       </tbody>
@@ -265,7 +285,7 @@ function ShiftPage() {
 
     {/* formatting for the new staff pop-up */}
     {showModal && (
-            <div style={{position: "fixed", top: 0, left: 0, height: "100vh", width: "100vw", backgroundColor: "rgba(0,0,0,0.4)", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <div style={{position: "fixed", top: 0, left: 0, height: "100vh", width: "100vw", backgroundColor: "rgba(181, 222, 242, 0.4)", display: "flex", justifyContent: "center", alignItems: "center"}}>
               <div style={{backgroundColor: "#fff", padding: "25px", borderRadius: "8px", width: "300px", display: "flex", flexDirection: "column", gap: "10px"}}>
                 <h3>New Shift Information</h3>
                 <label>
@@ -277,12 +297,15 @@ function ShiftPage() {
                   />
                 </label>
                 <label>
-                  Name:
-                  <input
-                    type="text"
-                    value={newShift.name}
-                    onChange={(e) => handleChange("name", e.target.value)} // make changes after user inputs information
-                  />
+                  Staff:
+                  <select value={newShift.staffId} onChange={(e) => handleChange("staffId", e.target.value)}>
+                    <option value="">- Select Staff -</option>
+                    {staffList.map((staff) => (
+                      <option key={staff.ID} value={staff.ID}>
+                        {staff.name} ({staff.role})
+                      </option>
+                    ))}
+                  </select>
                 </label>
                 <label>
                   Start Time:
@@ -325,7 +348,7 @@ function ShiftPage() {
 }
 
 
-// loads the pages
+// loads the pages and routes to correct site
 function App() {
   return (
     <Router>

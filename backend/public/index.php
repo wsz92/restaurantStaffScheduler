@@ -69,7 +69,7 @@ if ($serverPath === "/staffList") {
 
     } elseif ($requestMethod === "POST") { # if request method is POST
         $inputShift = json_decode(file_get_contents("php://input"), true); # retrieve the information inputted by user
-        if (!isset($inputShift["Day"], $inputShift["Start"], $inputShift["End"], $inputShift["Role"])|| empty(trim($inputShift["Day"])) || empty(trim($inputShift["Name"])) || 
+        if (!isset($inputShift["Day"], $inputShift["StaffID"], $inputShift["Start"], $inputShift["End"], $inputShift["Role"])|| empty(trim($inputShift["Day"])) || empty(trim($inputShift["StaffID"])) || 
         empty(trim($inputShift["Start"])) || empty(trim($inputShift["End"])) || empty(trim($inputShift["Role"]))) { // checks if fields are left empty
             http_response_code(400);
             echo json_encode(["Error" => "Shift Information is Missing!"]);
@@ -85,7 +85,7 @@ if ($serverPath === "/staffList") {
         $newShift = [
             "ID" => uniqid(), #  unique ID for the shift
             "day" => $inputShift["Day"],
-            "name" => $inputShift["Name"],
+            "staffId" => $inputShift["StaffID"],
             "start" => $inputShift["Start"],
             "end" => $inputShift["End"],
             "role" => $inputShift["Role"],
